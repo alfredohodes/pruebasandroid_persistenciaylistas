@@ -18,10 +18,12 @@ import ar.uba.fi.pruebalistasypersistencia.prendas.Prenda;
 import ar.uba.fi.pruebalistasypersistencia.prendas.PrendasAdapter;
 import ar.uba.fi.pruebalistasypersistencia.prendas.PrendasCursorAdapter;
 import fi.uba.ar.api.persistencia.BaseDeDatosHelper;
+import fi.uba.ar.listas.ListaPersistente;
 
 public class MostrarListaActivity extends Activity {
 
     private BaseDeDatosHelper _bdHelper;
+    private ListaPersistente<Prenda> _listaPrendas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +32,22 @@ public class MostrarListaActivity extends Activity {
         // We'll define a custom screen layout here (the one shown above), but
         // typically, you could just use the standard ListActivity layout.
         setContentView(R.layout.activity_mostrar_lista);
+        mostrarUsandoListaPersistente();
 
-        _bdHelper = BaseDeDatosHelper.crearHelper(getApplicationContext(), new ConfigArmarioBD());
+//        _bdHelper = BaseDeDatosHelper.crearHelper(getApplicationContext(), new ConfigArmarioBD());
 //        mostrarUsandoArrayList();
-        mostrarUsandoCusor();
+//        mostrarUsandoCusor();
+    }
+
+    private void mostrarUsandoListaPersistente() {
+        _listaPrendas = ListaPersistente.crearLista(getApplicationContext());
+        ArrayList<Prenda> prendas = _listaPrendas.obtenerTodo();
+
+        PrendasAdapter prendasAdapter = new PrendasAdapter(getApplicationContext(), prendas);
+
+        // Attach the adapter to a ListView
+        ListView listView = (ListView) findViewById(R.id.lista);
+        listView.setAdapter(prendasAdapter);
     }
 
     private void mostrarUsandoArrayList() {

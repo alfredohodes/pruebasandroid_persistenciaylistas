@@ -1,10 +1,19 @@
 package ar.uba.fi.pruebalistasypersistencia.prendas;
 
+import android.util.Log;
+
+import fi.uba.ar.listas.ElementoListaPersistente;
+
 /**
  * Created by Alfredo on 3/26/2017.
  */
 
-public class Prenda {
+public class Prenda extends ElementoListaPersistente {
+
+    public static ElementoListaPersistente crearDesdeCursor(){
+        Log.d("DANE", "Creando desde Prenda");
+        return null;
+    };
 
     public long getId() {
         return id;
