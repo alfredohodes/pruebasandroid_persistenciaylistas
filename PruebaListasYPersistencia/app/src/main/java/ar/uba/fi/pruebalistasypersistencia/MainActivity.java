@@ -13,11 +13,11 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button button1 = (Button) findViewById(R.id.button_mostrar_prendas);
-        button1.setOnClickListener(new View.OnClickListener() {
+        Button button2 = (Button) findViewById(R.id.button_mostrar_prendas);
+        button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent Intent = new Intent(view.getContext(), MostrarListaActivity.class);
+                Intent Intent =  new Intent(view.getContext(), MostrarListaActivity.class);
                 view.getContext().startActivity(Intent);}
         });
     }
