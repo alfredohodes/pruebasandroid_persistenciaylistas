@@ -12,7 +12,7 @@ public class Categoria extends SugarRecord
     @Unique
     String nombre;
 
-    String longNombre;
+    public Categoria padre;
 
     public Categoria()
     {
@@ -22,11 +22,10 @@ public class Categoria extends SugarRecord
     public Categoria(String nombre)
     {
         this.nombre = nombre;
-        this.longNombre = nombre + nombre;
     }
 
     public String toString()
     {
-        return "{Categoria(" + getId() + ") - Nombre: " + nombre + " - longNombre: " + longNombre + "}";
+        return "{Categoria(" + getId() + ") - Nombre: " + nombre + " - padre: " + padre + "}";
     }
 }

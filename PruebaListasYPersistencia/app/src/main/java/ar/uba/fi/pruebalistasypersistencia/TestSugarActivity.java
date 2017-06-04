@@ -20,7 +20,7 @@ public class TestSugarActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       // Categoria.deleteAll(Categoria.class);
+        Categoria.deleteAll(Categoria.class);
         crearCategorias();
         leerCategorias();
 
@@ -30,10 +30,12 @@ public class TestSugarActivity extends Activity {
 
     private void crearCategorias() {
         Log.d("DANE","crearCategorias!");
-        Categoria cat1 = new Categoria("cat1");
-        cat1.save();
-        Categoria cat2 = new Categoria("cat2");
-        cat2.save();
+        Categoria catPadre = new Categoria("cat padre");
+        catPadre.save();
+        Categoria catHija = new Categoria("catHija");
+        catHija.padre = catPadre;
+        catHija.save();
+        Log.d("DANE","catHija: " + catHija);
     }
 
     private void leerCategorias() {
