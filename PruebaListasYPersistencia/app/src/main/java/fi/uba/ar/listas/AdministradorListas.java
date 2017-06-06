@@ -7,4 +7,9 @@ import java.util.ArrayList;
  */
 
 public class AdministradorListas {
+
+//    public static ListaPersistente obtenerLista()
+//    {
+//
+//    }
 }

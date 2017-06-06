@@ -1,29 +1,26 @@
 package ar.uba.fi.pruebalistasypersistencia;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import ar.uba.fi.pruebalistasypersistencia.config.ConfigArmarioBD;
 import ar.uba.fi.pruebalistasypersistencia.config.ConfigTablaPrenda;
 import ar.uba.fi.pruebalistasypersistencia.prendas.Prenda;
 import ar.uba.fi.pruebalistasypersistencia.prendas.PrendasAdapter;
 import ar.uba.fi.pruebalistasypersistencia.prendas.PrendasCursorAdapter;
 import fi.uba.ar.api.persistencia.BaseDeDatosHelper;
-import fi.uba.ar.listas.ListaPersistente;
+import fi.uba.ar.listas.ListaPersistenteManual;
 
 public class MostrarListaActivity extends Activity {
 
     private BaseDeDatosHelper _bdHelper;
-    private ListaPersistente<Prenda> _listaPrendas;
+    private ListaPersistenteManual<Prenda> _listaPrendas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +37,7 @@ public class MostrarListaActivity extends Activity {
     }
 
     private void mostrarUsandoListaPersistente() {
-        _listaPrendas = ListaPersistente.crearLista(getApplicationContext());
+        _listaPrendas = ListaPersistenteManual.crearLista(getApplicationContext());
         ArrayList<Prenda> prendas = _listaPrendas.obtenerTodo();
 
         PrendasAdapter prendasAdapter = new PrendasAdapter(getApplicationContext(), prendas);

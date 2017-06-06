@@ -1,17 +1,23 @@
 package ar.uba.fi.pruebalistasypersistencia;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
-import com.orm.SugarApp;
+import com.orm.SchemaGenerator;
+import com.orm.SugarContext;
 import com.orm.SugarDb;
-import com.orm.util.SugarConfig;
 
 import java.util.List;
+
+import fi.uba.ar.api.persistencia.ObjetoPersistente;
+import fi.uba.ar.listas.AdministradorListas;
+import fi.uba.ar.listas.Categoria;
+import fi.uba.ar.listas.Etiqueta;
+import fi.uba.ar.listas.ItemLista;
+import fi.uba.ar.listas.ListaPersistente;
+import fi.uba.ar.listas.ListaUtils;
+import fi.uba.ar.listas.ParEtiquetaItem;
 
 public class TestSugarActivity extends Activity {
 
@@ -20,13 +26,28 @@ public class TestSugarActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Categoria.deleteAll(Categoria.class);
+        inicializarBD();
+
         crearCategorias();
         leerCategorias();
 
-        insertarRegistro();
-        leerRegistros();
+        crearEtiquetas();
+        leerEtiquetas();
+
+        crearPrendas();
+        leerPrendas();
     }
+
+    private void inicializarBD() {
+
+        // Borrar tablas
+        SugarContext.terminate();
+        SchemaGenerator schemaGenerator = new SchemaGenerator(getApplicationContext());
+        schemaGenerator.deleteTables(new SugarDb(getApplicationContext()).getDB());
+        SugarContext.init(getApplicationContext());
+        schemaGenerator.createDatabase(new SugarDb(getApplicationContext()).getDB());
+    }
+
 
     private void crearCategorias() {
         Log.d("DANE","crearCategorias!");
@@ -35,31 +56,68 @@ public class TestSugarActivity extends Activity {
         Categoria catHija = new Categoria("catHija");
         catHija.padre = catPadre;
         catHija.save();
-        Log.d("DANE","catHija: " + catHija);
     }
 
     private void leerCategorias() {
         Log.d("DANE","leerCategorias!");
-        List<Categoria> categorias = Categoria.listAll(Categoria.class);
+        List<Categoria> categorias = ListaUtils.listarTodos(Categoria.class);
         for (int i=0; i<categorias.size(); i++) {
             Log.d("DANE","categorias[" + i + "]: " + categorias.get(i));
         }
     }
 
-    private void insertarRegistro() {
-        Log.d("DANE","insertarRegistro!");
-        ItemLista item = new ItemLista("nomre1","categoria1");
-        Log.d("DANE","item creado!");
-        item.save();
-        Log.d("DANE","item guardado!");
 
+    private void crearEtiquetas() {
+        Log.d("DANE","crearEtiquetas!");
+
+        Etiqueta etiquetaCalor = new Etiqueta("calor");
+        Etiqueta etiquetaFrio = new Etiqueta("frio");
+        Etiqueta etiquetaInformal = new Etiqueta("informal");
+
+        etiquetaCalor.save();
+        etiquetaFrio.save();
+        etiquetaInformal.save();
     }
 
-    private void leerRegistros() {
-        Log.d("DANE","leerRegistros!");
-        List<ItemLista> items = ItemLista.listAll(ItemLista.class);
-        for (int i=0; i<items.size(); i++) {
-            Log.d("DANE","item[" + i + "]: " + items.get(i));
+    private void leerEtiquetas() {
+        Log.d("DANE","leerEtiquetas!");
+        List<Etiqueta> etiquetas = ListaUtils.listarTodos(Etiqueta.class);
+        for (int i=0; i<etiquetas.size(); i++) {
+            Log.d("DANE","etiquetas[" + i + "]: " + etiquetas.get(i));
+        }
+    }
+
+    private void crearPrendas() {
+
+        Prenda remera = new Prenda("Remera","ruta/remera");
+        Prenda pantalon = new Prenda("Pantalon","ruta/pantalon");
+        Prenda campera = new Prenda("Campera","ruta/campera");
+
+        Categoria catHija = Categoria.find(Categoria.class,"nombre = ?", "catHija").get(0);
+        Log.d("DANE","catHija found: " + catHija);
+
+        remera.categoria = catHija;
+
+        remera.save();
+        pantalon.save();
+        campera.save();
+
+        remera.agregarEtiqueta(Etiqueta.obtenerOCrear("calor"));
+        campera.agregarEtiqueta("frio");
+
+        remera.save();
+        pantalon.save();
+        campera.save();
+
+        Log.d("DANE","obtener etiquetas");
+        remera.obtenerEtiquetas();
+    }
+
+    private void leerPrendas() {
+
+        List<Prenda> prendas = ListaUtils.listarTodos(Prenda.class);
+        for (int i=0; i<prendas.size(); i++) {
+            Log.d("DANE","prendas[" + i + "]: " + prendas.get(i));
         }
     }
 
