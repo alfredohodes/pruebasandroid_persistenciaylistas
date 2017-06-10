@@ -104,13 +104,19 @@ public class TestSugarActivity extends Activity {
 
         remera.agregarEtiqueta(Etiqueta.obtenerOCrear("calor"));
         campera.agregarEtiqueta("frio");
+        campera.agregarEtiqueta("informal");
+        pantalon.agregarEtiqueta(Etiqueta.obtenerOCrear("informal"));
 
 //        remera.save();
 //        pantalon.save();
 //        campera.save();
 
-        Log.d("DANE","obtener etiquetas");
+        Log.d("DANE","obtener etiquetas de remera (prenda id: " + remera.getId() + ")");
         remera.obtenerEtiquetas();
+        Log.d("DANE","obtener etiquetas de campera (prenda id: " + campera.getId() + ")");
+        campera.obtenerEtiquetas();
+        Log.d("DANE","obtener etiquetas de pantalon (prenda id: " + pantalon.getId() + ")");
+        pantalon.obtenerEtiquetas();
     }
 
     private void leerPrendas() {

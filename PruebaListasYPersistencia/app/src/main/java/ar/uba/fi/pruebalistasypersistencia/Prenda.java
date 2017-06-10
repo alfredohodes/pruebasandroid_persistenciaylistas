@@ -14,7 +14,7 @@ public class Prenda extends ItemLista {
     public String rutaImagen;
 
     public Prenda(){super();
-        Log.d("DANE","nueva Prenda");
+//        Log.d("DANE","nueva Prenda");
     }
 
     public Prenda(String nombre, String rutaImagen)
@@ -22,7 +22,7 @@ public class Prenda extends ItemLista {
         super();
         this.nombre = nombre;
         this.rutaImagen = rutaImagen;
-        Log.d("DANE","nueva Prenda(" + nombre + ")");
+//        Log.d("DANE","nueva Prenda(" + nombre + ")");
     }
 
     public String toString()

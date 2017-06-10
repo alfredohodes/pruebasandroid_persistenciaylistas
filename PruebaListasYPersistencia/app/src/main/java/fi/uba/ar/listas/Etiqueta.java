@@ -18,12 +18,12 @@ public class Etiqueta extends ItemLista {
     public String nombre;
 
     public Etiqueta() {
-        Log.d("DANE","nueva Etiqueta");
+//        Log.d("DANE","nueva Etiqueta");
     }
 
     public Etiqueta(String nombre) {
         this.nombre = nombre;
-        Log.d("DANE","nueva Etiqueta(" + nombre + ")");
+//        Log.d("DANE","nueva Etiqueta(" + nombre + ")");
     }
 
     public String toString() {

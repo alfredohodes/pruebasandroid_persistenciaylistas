@@ -29,18 +29,18 @@ public class ObjetoPersistente extends SugarRecord {
 
     public void InicializarPostLoaded()
     {
-        Log.d("DANE","InicializarPostLoaded--- " + this);
+//        Log.d("DANE","InicializarPostLoaded--- " + this);
     }
 
     public static <T> List<T> find(Class<T> type, String whereClause, String[] whereArgs, String groupBy, String orderBy, String limit) {
 
-        Log.d("DANE","Custom FIND - antes!");
+//        Log.d("DANE","Custom FIND - antes!");
         Cursor cursor = TestSugarActivity.sugarDb.getDB().query(NamingHelper.toSQLName(type), null, whereClause, whereArgs,
                 groupBy, null, orderBy, limit);
-        Log.d("DANE","Custom FIND - dps!");
+//        Log.d("DANE","Custom FIND - dps!");
 
         List<T> entities = getEntitiesFromCursor(cursor, type);
-        Log.d("DANE","Custom FIND - fin!");
+//        Log.d("DANE","Custom FIND - fin!");
 
         if(entities != null)
         {
@@ -118,7 +118,7 @@ public class ObjetoPersistente extends SugarRecord {
 
 
         List<T> entities = getEntitiesFromCursor(cursor, type);
-        Log.d("DANE","Custom FIND - fin!");
+//        Log.d("DANE","Custom FIND - fin!");
 
         if(entities != null)
         {
@@ -133,4 +133,49 @@ public class ObjetoPersistente extends SugarRecord {
         }
         return  entities;
     }
+
+    public static <T> List<T> rawQuery(Class<T> type, String query, String... arguments)
+    {
+//        Log.d("DANE","rawQuery: " + query);
+        Cursor cursor = TestSugarActivity.sugarDb.getDB().rawQuery(query, arguments);
+        List<T> result = new ArrayList<T>();
+        try {
+            while (cursor.moveToNext()) {
+//                Log.d("DANE","cursor: " + cursor.getColumnNames() + " - column(0): " + cursor.getString(0));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            cursor.close();
+        }
+        return  result;
+    }
+
+    public static <T> T encontrarAtributo(ObjetoPersistente objeto, String nombreAtributo, Class tipoAtributo)
+    {
+        String tablaObjeto      = NamingHelper.toSQLName(objeto.getClass());
+        String columnaAtributo  = nombreAtributo;
+
+//        Log.d("DANE","Par - tablaObjeto: " + tablaObjeto);
+//        Log.d("DANE","Par - columnaAtributo: " + columnaAtributo);
+//        Log.d("DANE","Par - atributoVar: " + columnaAtributo);
+        String query = "SELECT " + columnaAtributo + " FROM " + tablaObjeto + " WHERE ID = ? LIMIT 1";
+        Log.d("DANE","rawQuery: " + query);
+        String[] selectionArgs = {Long.toString(objeto.getId())};
+        Cursor cursor = TestSugarActivity.sugarDb.getDB().rawQuery(query, selectionArgs);
+        if(cursor.getCount() > 0)
+        {
+            cursor.moveToNext();
+            long atributoId = cursor.getLong(0);
+            Log.d("DANE","atributoId: " + atributoId);
+            return (T) findById(tipoAtributo, atributoId);
+        }
+        else
+        {
+            Log.d("DANE","not found");
+            return null;
+        }
+    }
+
+
 }
