@@ -17,7 +17,7 @@ public class MainActivity extends Activity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent Intent =  new Intent(view.getContext(), MostrarListaActivity.class);
+                Intent Intent =  new Intent(view.getContext(), TestSugarActivity.class);
                 view.getContext().startActivity(Intent);}
         });
     }

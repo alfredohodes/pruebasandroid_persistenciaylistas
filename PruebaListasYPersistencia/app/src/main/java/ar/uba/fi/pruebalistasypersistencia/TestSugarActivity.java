@@ -10,14 +10,9 @@ import com.orm.SugarDb;
 
 import java.util.List;
 
-import fi.uba.ar.api.persistencia.ObjetoPersistente;
-import fi.uba.ar.listas.AdministradorListas;
 import fi.uba.ar.listas.Categoria;
 import fi.uba.ar.listas.Etiqueta;
-import fi.uba.ar.listas.ItemLista;
-import fi.uba.ar.listas.ListaPersistente;
 import fi.uba.ar.listas.ListaUtils;
-import fi.uba.ar.listas.ParEtiquetaItem;
 
 public class TestSugarActivity extends Activity {
 
