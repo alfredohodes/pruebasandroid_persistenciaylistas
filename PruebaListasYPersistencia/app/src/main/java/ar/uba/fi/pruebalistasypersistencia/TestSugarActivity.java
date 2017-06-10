@@ -25,13 +25,15 @@ public class TestSugarActivity extends Activity {
 
         inicializarBD();
 
-        crearCategorias();
-        leerCategorias();
-
-        crearEtiquetas();
-        leerEtiquetas();
-
-        crearPrendas();
+//        limpiarBD();
+//
+//        crearCategorias();
+//        leerCategorias();
+//
+//        crearEtiquetas();
+//        leerEtiquetas();
+//
+//        crearPrendas();
         leerPrendas();
 
         DBUtils.Dump("Sugar.db", getPackageName(), "Sugar.db");
@@ -41,6 +43,17 @@ public class TestSugarActivity extends Activity {
 
         // Borrar tablas
         SugarContext.terminate();
+
+        SchemaGenerator schemaGenerator = new SchemaGenerator(getApplicationContext());
+        SugarContext.init(getApplicationContext());
+        sugarDb = new SugarDb(getApplicationContext());
+        schemaGenerator.createDatabase(sugarDb.getDB());
+    }
+    private void limpiarBD() {
+
+        // Borrar tablas
+        SugarContext.terminate();
+
         SchemaGenerator schemaGenerator = new SchemaGenerator(getApplicationContext());
         schemaGenerator.deleteTables(new SugarDb(getApplicationContext()).getDB());
         SugarContext.init(getApplicationContext());
@@ -102,10 +115,10 @@ public class TestSugarActivity extends Activity {
         pantalon.save();
         campera.save();
 
-        remera.agregarEtiqueta(Etiqueta.obtenerOCrear("calor"));
         campera.agregarEtiqueta("frio");
-        campera.agregarEtiqueta("informal");
-        pantalon.agregarEtiqueta(Etiqueta.obtenerOCrear("informal"));
+        remera.agregarEtiqueta(Etiqueta.obtenerOCrear("calor"));
+        pantalon.agregarEtiqueta("informal");
+        campera.agregarEtiqueta(Etiqueta.obtenerOCrear("informal"));
 
 //        remera.save();
 //        pantalon.save();
@@ -124,6 +137,7 @@ public class TestSugarActivity extends Activity {
         List<Prenda> prendas = ListaUtils.listarTodos(Prenda.class);
         for (int i=0; i<prendas.size(); i++) {
             Log.d("DANE","prendas[" + i + "]: " + prendas.get(i));
+            prendas.get(i).obtenerEtiquetas();
         }
     }
 

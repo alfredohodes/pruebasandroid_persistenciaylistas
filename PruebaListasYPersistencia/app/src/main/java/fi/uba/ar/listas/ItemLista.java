@@ -54,10 +54,10 @@ public class ItemLista extends ObjetoPersistente
     }
     public List<Etiqueta> obtenerEtiquetas()
     {
-        Log.d("DANE","LIST PARES FOR ITEM " + this.getId().toString());
+        Log.d("DANE","LISTAR ETIQUETAS DE " + this.getId().toString());
         List<ParEtiquetaItem> pares = ObjetoPersistente.find(ParEtiquetaItem.class, "item = ?", this.getId().toString());
         for (int i=0; i<pares.size(); i++) {
-            Log.d("DANE","pares[" + i + "]: + " + pares.get(i));
+            Log.d("DANE","---ET_IT[" + i + "]: + " + pares.get(i));
         }
         return null;
     }

@@ -47,7 +47,7 @@ public class ParEtiquetaItem<T extends ItemLista> extends ItemLista {
     public void InicializarPostLoaded()
     {
         super.InicializarPostLoaded();
-//        Log.d("DANE","Prenda ItemType: " + itemType + " - typeStr: " + typeStr);
+//        Log.d("DANE","Prenda ItemType: " + itemType + " - typeStr: " + typeStr + " parId: " + getId());
         if(item == null || item.getClass().toString() !=  typeStr)
         {
 //            Log.d("DANE","Buscando item de tipo " + typeStr);

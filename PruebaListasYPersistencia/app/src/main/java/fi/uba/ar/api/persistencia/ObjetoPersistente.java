@@ -46,9 +46,9 @@ public class ObjetoPersistente extends SugarRecord {
         {
             for(int i = 0; i < entities.size(); i++)
             {
-                if(entities.get(0) instanceof ObjetoPersistente)
+                if(entities.get(i) instanceof ObjetoPersistente)
                 {
-                    ObjetoPersistente objPers = ObjetoPersistente.class.cast(entities.get(0));
+                    ObjetoPersistente objPers = ObjetoPersistente.class.cast(entities.get(i));
                     objPers.InicializarPostLoaded();
                 }
             }
@@ -124,9 +124,9 @@ public class ObjetoPersistente extends SugarRecord {
         {
             for(int i = 0; i < entities.size(); i++)
             {
-                if(entities.get(0) instanceof ObjetoPersistente)
+                if(entities.get(i) instanceof ObjetoPersistente)
                 {
-                    ObjetoPersistente objPers = ObjetoPersistente.class.cast(entities.get(0));
+                    ObjetoPersistente objPers = ObjetoPersistente.class.cast(entities.get(i));
                     objPers.InicializarPostLoaded();
                 }
             }
@@ -160,14 +160,14 @@ public class ObjetoPersistente extends SugarRecord {
 //        Log.d("DANE","Par - columnaAtributo: " + columnaAtributo);
 //        Log.d("DANE","Par - atributoVar: " + columnaAtributo);
         String query = "SELECT " + columnaAtributo + " FROM " + tablaObjeto + " WHERE ID = ? LIMIT 1";
-        Log.d("DANE","rawQuery: " + query);
+//        Log.d("DANE","rawQuery: " + query);
         String[] selectionArgs = {Long.toString(objeto.getId())};
         Cursor cursor = TestSugarActivity.sugarDb.getDB().rawQuery(query, selectionArgs);
         if(cursor.getCount() > 0)
         {
             cursor.moveToNext();
             long atributoId = cursor.getLong(0);
-            Log.d("DANE","atributoId: " + atributoId);
+//            Log.d("DANE","atributoId: " + atributoId);
             return (T) findById(tipoAtributo, atributoId);
         }
         else
