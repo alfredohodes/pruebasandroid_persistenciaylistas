@@ -1,5 +1,7 @@
 package ar.uba.fi.pruebalistasypersistencia;
 
+import android.util.Log;
+
 import fi.uba.ar.listas.ItemLista;
 
 /**
@@ -11,13 +13,16 @@ public class Prenda extends ItemLista {
     public String nombre;
     public String rutaImagen;
 
-    public Prenda(){super();}
+    public Prenda(){super();
+        Log.d("DANE","nueva Prenda");
+    }
 
     public Prenda(String nombre, String rutaImagen)
     {
         super();
         this.nombre = nombre;
         this.rutaImagen = rutaImagen;
+        Log.d("DANE","nueva Prenda(" + nombre + ")");
     }
 
     public String toString()

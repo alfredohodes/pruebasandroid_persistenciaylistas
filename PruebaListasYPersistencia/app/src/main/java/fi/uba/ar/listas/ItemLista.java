@@ -6,6 +6,7 @@ import com.orm.SugarRecord;
 
 import java.util.List;
 
+import ar.uba.fi.pruebalistasypersistencia.Prenda;
 import fi.uba.ar.api.persistencia.ObjetoPersistente;
 
 /**
@@ -24,6 +25,7 @@ public class ItemLista extends ObjetoPersistente
     {
         super();
         this.categoria = categoria;
+        Log.d("DANE","nuevo ItemLista");
     }
 
     public String toString()
@@ -37,7 +39,7 @@ public class ItemLista extends ObjetoPersistente
     }
     public void agregarEtiqueta(Etiqueta etiqueta)
     {
-        ParEtiquetaItem parEtiquetaItem = new ParEtiquetaItem(this,etiqueta);
+        ParEtiquetaItem<Prenda> parEtiquetaItem = new ParEtiquetaItem<Prenda>((Prenda)this,etiqueta);
         parEtiquetaItem.save();
         Log.d("DANE","agregarEtiqueta - parEtiquetaItem: " + parEtiquetaItem + " - etiqueta: " + etiqueta.nombre);
     }
@@ -52,11 +54,8 @@ public class ItemLista extends ObjetoPersistente
     }
     public List<Etiqueta> obtenerEtiquetas()
     {
-        Log.d("DANE","LIST ALL PARES");
-        List<ParEtiquetaItem> paresTodos = ListaUtils.listarTodos(ParEtiquetaItem.class);
-        for (int i=0; i<paresTodos.size(); i++) {
-            Log.d("DANE","paresTodos[" + i + "]: i: " + paresTodos.get(i).item  + " - e: " + paresTodos.get(i).etiqueta.nombre);
-        }
+        Log.d("DANE","LIST UN PAR POR ID");
+        ObjetoPersistente.findById(ParEtiquetaItem.class, 1);
 
 
         Log.d("DANE","LIST PARES FOR ITEM " + this.getId().toString());

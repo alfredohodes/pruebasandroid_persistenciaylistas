@@ -1,5 +1,7 @@
 package fi.uba.ar.listas;
 
+import android.util.Log;
+
 import com.orm.dsl.Unique;
 
 import java.util.List;
@@ -15,33 +17,27 @@ public class Etiqueta extends ItemLista {
     @Unique
     public String nombre;
 
-    public Etiqueta()
-    {
-
+    public Etiqueta() {
+        Log.d("DANE","nueva Etiqueta");
     }
 
-    public Etiqueta(String nombre)
-    {
+    public Etiqueta(String nombre) {
         this.nombre = nombre;
+        Log.d("DANE","nueva Etiqueta(" + nombre + ")");
     }
 
-    public String toString()
-    {
+    public String toString() {
         return "{Etiqueta(" + getId() + ") - Nombre: " + nombre + "}";
     }
 
-    public static Etiqueta obtenerOCrear(String nombreEtiqueta)
-    {
-        List<Etiqueta> etiquetas = ObjetoPersistente.find(Etiqueta.class,"nombre = ?", nombreEtiqueta);
-        if(etiquetas == null || etiquetas.size() == 0)
-        {
+    public static Etiqueta obtenerOCrear(String nombreEtiqueta) {
+        List<Etiqueta> etiquetas = ObjetoPersistente.find(Etiqueta.class, "nombre = ?", nombreEtiqueta);
+        if (etiquetas == null || etiquetas.size() == 0) {
             // Etiqueta no existente. Crearla
             Etiqueta etiqueta = new Etiqueta(nombreEtiqueta);
             etiqueta.save();
             return etiqueta;
-        }
-        else
-        {
+        } else {
             return etiquetas.get(0);
         }
     }

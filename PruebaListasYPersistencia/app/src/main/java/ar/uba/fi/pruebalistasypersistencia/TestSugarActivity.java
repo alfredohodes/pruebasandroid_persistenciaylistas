@@ -16,6 +16,8 @@ import fi.uba.ar.listas.ListaUtils;
 
 public class TestSugarActivity extends Activity {
 
+    public static SugarDb sugarDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +44,8 @@ public class TestSugarActivity extends Activity {
         SchemaGenerator schemaGenerator = new SchemaGenerator(getApplicationContext());
         schemaGenerator.deleteTables(new SugarDb(getApplicationContext()).getDB());
         SugarContext.init(getApplicationContext());
-        schemaGenerator.createDatabase(new SugarDb(getApplicationContext()).getDB());
+        sugarDb = new SugarDb(getApplicationContext());
+        schemaGenerator.createDatabase(sugarDb.getDB());
     }
 
 
