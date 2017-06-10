@@ -31,6 +31,8 @@ public class TestSugarActivity extends Activity {
 
         crearPrendas();
         leerPrendas();
+
+        DBUtils.Dump("Sugar.db", getPackageName(), "Sugar.db");
     }
 
     private void inicializarBD() {
