@@ -1,7 +1,13 @@
-package ar.uba.fi.pruebalistasypersistencia;
+package fi.uba.ar.api.persistencia;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.util.Log;
+
+import com.orm.SchemaGenerator;
+import com.orm.SugarContext;
+import com.orm.SugarDb;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +20,23 @@ import java.nio.channels.FileChannel;
 
 public class DBUtils {
 
+    private  static SQLiteDatabase _db;
+    public static SQLiteDatabase GetDB()
+    {
+        return _db;
+    }
+
+    public  static void Inicializar(Context context, boolean borrarTablas)
+    {
+        SugarContext.terminate();
+
+        SchemaGenerator schemaGenerator = new SchemaGenerator(context);
+        if(borrarTablas) schemaGenerator.deleteTables(new SugarDb(context).getDB());
+        SugarContext.init(context);
+        SugarDb sugarDb = new SugarDb(context);
+        _db = sugarDb.getDB();
+        schemaGenerator.createDatabase(_db);
+    }
     public static void Dump(String dbName, String packageName, String outputDBName)
     {
         try {

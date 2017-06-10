@@ -35,7 +35,7 @@ public class ObjetoPersistente extends SugarRecord {
     public static <T> List<T> find(Class<T> type, String whereClause, String[] whereArgs, String groupBy, String orderBy, String limit) {
 
 //        Log.d("DANE","Custom FIND - antes!");
-        Cursor cursor = TestSugarActivity.sugarDb.getDB().query(NamingHelper.toSQLName(type), null, whereClause, whereArgs,
+        Cursor cursor = DBUtils.GetDB().query(NamingHelper.toSQLName(type), null, whereClause, whereArgs,
                 groupBy, null, orderBy, limit);
 //        Log.d("DANE","Custom FIND - dps!");
 
@@ -114,7 +114,7 @@ public class ObjetoPersistente extends SugarRecord {
     }
 
     public static <T> List<T> findWithQuery(Class<T> type, String query, String... arguments) {
-        Cursor cursor = TestSugarActivity.sugarDb.getDB().rawQuery(query, arguments);
+        Cursor cursor = DBUtils.GetDB().rawQuery(query, arguments);
 
 
         List<T> entities = getEntitiesFromCursor(cursor, type);
@@ -137,7 +137,7 @@ public class ObjetoPersistente extends SugarRecord {
     public static <T> List<T> rawQuery(Class<T> type, String query, String... arguments)
     {
 //        Log.d("DANE","rawQuery: " + query);
-        Cursor cursor = TestSugarActivity.sugarDb.getDB().rawQuery(query, arguments);
+        Cursor cursor = DBUtils.GetDB().rawQuery(query, arguments);
         List<T> result = new ArrayList<T>();
         try {
             while (cursor.moveToNext()) {
@@ -162,7 +162,7 @@ public class ObjetoPersistente extends SugarRecord {
         String query = "SELECT " + columnaAtributo + " FROM " + tablaObjeto + " WHERE ID = ? LIMIT 1";
 //        Log.d("DANE","rawQuery: " + query);
         String[] selectionArgs = {Long.toString(objeto.getId())};
-        Cursor cursor = TestSugarActivity.sugarDb.getDB().rawQuery(query, selectionArgs);
+        Cursor cursor = DBUtils.GetDB().rawQuery(query, selectionArgs);
         if(cursor.getCount() > 0)
         {
             cursor.moveToNext();

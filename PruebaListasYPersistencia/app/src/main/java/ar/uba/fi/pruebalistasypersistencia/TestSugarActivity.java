@@ -4,26 +4,21 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.orm.SchemaGenerator;
-import com.orm.SugarContext;
-import com.orm.SugarDb;
-
 import java.util.List;
 
+import fi.uba.ar.api.persistencia.DBUtils;
 import fi.uba.ar.listas.Categoria;
 import fi.uba.ar.listas.Etiqueta;
 import fi.uba.ar.listas.ListaUtils;
 
 public class TestSugarActivity extends Activity {
 
-    public static SugarDb sugarDb;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        inicializarBD();
+        DBUtils.Inicializar(getApplicationContext(), true);
 
 //        limpiarBD();
 //
@@ -38,29 +33,6 @@ public class TestSugarActivity extends Activity {
 
         DBUtils.Dump("Sugar.db", getPackageName(), "Sugar.db");
     }
-
-    private void inicializarBD() {
-
-        // Borrar tablas
-        SugarContext.terminate();
-
-        SchemaGenerator schemaGenerator = new SchemaGenerator(getApplicationContext());
-        SugarContext.init(getApplicationContext());
-        sugarDb = new SugarDb(getApplicationContext());
-        schemaGenerator.createDatabase(sugarDb.getDB());
-    }
-    private void limpiarBD() {
-
-        // Borrar tablas
-        SugarContext.terminate();
-
-        SchemaGenerator schemaGenerator = new SchemaGenerator(getApplicationContext());
-        schemaGenerator.deleteTables(new SugarDb(getApplicationContext()).getDB());
-        SugarContext.init(getApplicationContext());
-        sugarDb = new SugarDb(getApplicationContext());
-        schemaGenerator.createDatabase(sugarDb.getDB());
-    }
-
 
     private void crearCategorias() {
         Log.d("DANE","crearCategorias!");
