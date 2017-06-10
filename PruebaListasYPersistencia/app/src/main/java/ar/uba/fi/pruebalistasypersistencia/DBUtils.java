@@ -20,7 +20,7 @@ public class DBUtils {
             File sd = Environment.getExternalStorageDirectory();
             File data = Environment.getDataDirectory();
 
-            Log.d("DANE", "sd.canWrite(): " + sd.canWrite());
+//            Log.d("DANE", "sd.canWrite(): " + sd.canWrite());
             if (sd.canWrite()) {
                 String currentDBPath = "/data/data/" + packageName + "/databases/" + dbName;
                 String backupDBPath = outputDBName;

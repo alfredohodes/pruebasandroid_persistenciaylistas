@@ -102,9 +102,9 @@ public class TestSugarActivity extends Activity {
         remera.agregarEtiqueta(Etiqueta.obtenerOCrear("calor"));
         campera.agregarEtiqueta("frio");
 
-        remera.save();
-        pantalon.save();
-        campera.save();
+//        remera.save();
+//        pantalon.save();
+//        campera.save();
 
         Log.d("DANE","obtener etiquetas");
         remera.obtenerEtiquetas();
