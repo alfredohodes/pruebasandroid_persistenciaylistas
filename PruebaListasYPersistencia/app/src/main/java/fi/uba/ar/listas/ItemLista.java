@@ -2,8 +2,6 @@ package fi.uba.ar.listas;
 
 import android.util.Log;
 
-import com.orm.SugarRecord;
-
 import java.util.List;
 
 import ar.uba.fi.pruebalistasypersistencia.Prenda;
@@ -41,7 +39,7 @@ public class ItemLista extends ObjetoPersistente
     {
         ParEtiquetaItem<Prenda> parEtiquetaItem = new ParEtiquetaItem<Prenda>((Prenda)this,etiqueta);
         parEtiquetaItem.save();
-        Log.d("DANE","agregarEtiqueta - parEtiquetaItem: " + parEtiquetaItem + " - etiqueta: " + etiqueta.nombre);
+//        Log.d("DANE","agregarEtiqueta - parEtiquetaItem: " + parEtiquetaItem + " - etiqueta: " + etiqueta.nombre);
     }
 
     public void setCategoria(Categoria categoria)
@@ -71,5 +69,13 @@ public class ItemLista extends ObjetoPersistente
             Log.d("DANE","---ET_IT[" + i + "]: + " + pares.get(i));
         }
         return null;
+    }
+
+    @Override
+    public boolean delete()
+    {
+        // Antes de eliminar ItemLista, elminar las relaciones Many-to-Many con Etiquetas
+        ParEtiquetaItem.eliminarRelacionesParaItem(this);
+        return super.delete();
     }
 }

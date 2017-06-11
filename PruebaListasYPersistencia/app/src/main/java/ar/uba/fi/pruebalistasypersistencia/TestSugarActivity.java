@@ -7,9 +7,11 @@ import android.util.Log;
 import java.util.List;
 
 import fi.uba.ar.api.persistencia.DBUtils;
+import fi.uba.ar.api.persistencia.ObjetoPersistente;
 import fi.uba.ar.listas.Categoria;
 import fi.uba.ar.listas.Etiqueta;
 import fi.uba.ar.listas.ListaUtils;
+import fi.uba.ar.listas.ParEtiquetaItem;
 
 public class TestSugarActivity extends Activity {
 
@@ -29,7 +31,13 @@ public class TestSugarActivity extends Activity {
         crearPrendas();
         leerPrendas();
 
-        DBUtils.Dump("Sugar.db", getPackageName(), "Sugar.db");
+        DBUtils.Dump("Sugar.db", getPackageName(), "Sugar_PreEliminado.db");
+        
+        testearAutoeliminadoDeRelacionesItemEtiqueta();
+
+        leerPrendas();
+
+        DBUtils.Dump("Sugar.db", getPackageName(), "Sugar_PostEliminado.db");
     }
 
     private void crearCategorias() {
@@ -102,6 +110,35 @@ public class TestSugarActivity extends Activity {
         for (int i=0; i<prendas.size(); i++) {
             Log.d("DANE","prendas[" + i + "]: " + prendas.get(i));
             prendas.get(i).obtenerEtiquetas();
+        }
+    }
+
+    private void testearAutoeliminadoDeRelacionesItemEtiqueta() {
+        Log.d("DANE","*** testearAutoeliminadoDeRelacionesItemEtiqueta ***");
+
+        Log.d("DANE","RELACIONES AL COMENZAR:");
+        LoguearRelacionesItemsEtiquetas();
+
+        // Borrar un item
+        Prenda remera = ObjetoPersistente.findFirst(Prenda.class, "nombre = ?", "Remera");
+        Log.d("DANE","ELIMINANDO ITEM remera...");
+        remera.delete();
+        Log.d("DANE","RELACIONES DESPUES DE ELIMINAR PRENDA remera:");
+        LoguearRelacionesItemsEtiquetas();
+
+        // Borrar una etiqueta
+        Log.d("DANE","ELIMINANDO ETIQUETA informal...");
+        Etiqueta etInformal = Etiqueta.obtener("informal");
+        etInformal.delete();
+        Log.d("DANE","RELACIONES DESPUES DE ELIMINAR ETIQUETA informal:");
+        LoguearRelacionesItemsEtiquetas();
+    }
+
+    private void LoguearRelacionesItemsEtiquetas() {
+        List<ParEtiquetaItem> pares = ListaUtils.listarTodos(ParEtiquetaItem.class);
+        for (int i=0; i<pares.size(); i++)
+        {
+            Log.d("DANE", "Relación: " + pares.get(i));
         }
     }
 

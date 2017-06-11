@@ -1,7 +1,5 @@
 package ar.uba.fi.pruebalistasypersistencia;
 
-import android.util.Log;
-
 import fi.uba.ar.listas.ItemLista;
 
 /**

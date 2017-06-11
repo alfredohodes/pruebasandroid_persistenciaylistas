@@ -1,24 +1,14 @@
 package fi.uba.ar.api.persistencia;
 
 import android.database.Cursor;
-import android.util.Log;
 
-import com.orm.SugarContext;
-import com.orm.SugarDb;
 import com.orm.SugarRecord;
 import com.orm.util.NamingHelper;
 import com.orm.util.QueryBuilder;
-import com.orm.util.ReflectionUtil;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import ar.uba.fi.pruebalistasypersistencia.TestSugarActivity;
-
-import static com.orm.SugarContext.getSugarContext;
 
 /**
  * Created by Alfredo on 6/4/2017.
@@ -34,20 +24,20 @@ public class ObjetoPersistente extends SugarRecord {
 
     public static <T> List<T> find(Class<T> type, String whereClause, String[] whereArgs, String groupBy, String orderBy, String limit) {
 
-        Log.d("DANE","Custom FIND - antes!");
+//        Log.d("DANE","Custom FIND - antes!");
         Cursor cursor = DBUtils.GetDB().query(NamingHelper.toSQLName(type), null, whereClause, whereArgs,
                 groupBy, null, orderBy, limit);
-        Log.d("DANE","Custom FIND - dps!");
+//        Log.d("DANE","Custom FIND - dps!");
 
         List<T> entities = getEntitiesFromCursor(cursor, type);
-        Log.d("DANE","Custom FIND - fin!");
+//        Log.d("DANE","Custom FIND - fin!");
 
         if(entities != null)
         {
-            Log.d("DANE","entities.size(): " + entities.size());
+//            Log.d("DANE","entities.size(): " + entities.size());
             for(int i = 0; i < entities.size(); i++)
             {
-                Log.d("DANE","i: " + i);
+//                Log.d("DANE","i: " + i);
                 if(entities.get(i) instanceof ObjetoPersistente)
                 {
                     ObjetoPersistente objPers = ObjetoPersistente.class.cast(entities.get(i));
@@ -115,6 +105,12 @@ public class ObjetoPersistente extends SugarRecord {
         return find(type, whereClause, whereArgs, null, null, null);
     }
 
+    public static <T> T findFirst(Class<T> type, String whereClause, String... whereArgs) {
+        List<T> list = find(type, whereClause, whereArgs, null, null, null);
+        if(list != null && list.size() > 0) return list.get(0);
+        return null;
+    }
+
     public static <T> List<T> findWithQuery(Class<T> type, String query, String... arguments) {
         Cursor cursor = DBUtils.GetDB().rawQuery(query, arguments);
 
@@ -174,7 +170,7 @@ public class ObjetoPersistente extends SugarRecord {
         }
         else
         {
-            Log.d("DANE","not found");
+//            Log.d("DANE","not found");
             return null;
         }
     }
@@ -200,7 +196,7 @@ public class ObjetoPersistente extends SugarRecord {
         }
         else
         {
-            Log.d("DANE","not found");
+//            Log.d("DANE","not found");
             return null;
         }
     }

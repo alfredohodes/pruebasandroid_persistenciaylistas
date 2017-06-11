@@ -1,7 +1,5 @@
 package fi.uba.ar.listas;
 
-import android.util.Log;
-
 import com.orm.dsl.Unique;
 
 import java.util.List;
@@ -46,5 +44,13 @@ public class Etiqueta extends ItemLista {
         List<Etiqueta> etiquetas = ObjetoPersistente.find(Etiqueta.class, "nombre = ?", nombreEtiqueta);
         if (etiquetas == null || etiquetas.size() == 0) return null;
         return etiquetas.get(0);
+    }
+
+    @Override
+    public boolean delete()
+    {
+        // Antes de eliminar Etiqueta, elminar las relaciones Many-to-Many con Etiquetas
+        ParEtiquetaItem.eliminarRelacionesParaEtiqueta(this);
+        return super.delete();
     }
 }
