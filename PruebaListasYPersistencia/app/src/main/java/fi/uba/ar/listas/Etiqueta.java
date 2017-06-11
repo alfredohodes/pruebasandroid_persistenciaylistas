@@ -1,5 +1,7 @@
 package fi.uba.ar.listas;
 
+import android.util.Log;
+
 import com.orm.dsl.Unique;
 
 import java.util.List;
@@ -22,6 +24,13 @@ public class Etiqueta extends ItemLista {
     public Etiqueta(String nombre) {
         this.nombre = nombre;
 //        Log.d("DANE","nueva Etiqueta(" + nombre + ")");
+    }
+
+    public void Renombrar(String nuevoNombre)
+    {
+        Log.d("DANE","Renombrar Etiqueta(" + nombre + ") -> " + nuevoNombre);
+        this.nombre = nuevoNombre;
+        save();
     }
 
     public String toString() {

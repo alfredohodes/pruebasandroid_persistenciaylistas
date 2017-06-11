@@ -1,5 +1,7 @@
 package fi.uba.ar.listas;
 
+import android.util.Log;
+
 import com.orm.dsl.Unique;
 
 import java.util.List;
@@ -32,6 +34,13 @@ public class Categoria extends ItemLista {
         return "{Categoria(" + getId() + ") - Nombre: " + nombre + " - padre: " + padre + "}";
     }
 
+    public void Renombrar(String nuevoNombre)
+    {
+        Log.d("DANE","Renombrar Categoria(" + nombre + ") -> " + nuevoNombre);
+        this.nombre = nuevoNombre;
+        save();
+    }
+
     public void SetPadre(Categoria padre)
     {
         this.padre = padre;
@@ -61,21 +70,13 @@ public class Categoria extends ItemLista {
      */
     public static Categoria obtener(String nombreCategoria, Categoria padre) {
         List<Categoria> categorias;
-        if(padre != null)
-        {
-            // Busca dentro de cat padre
-            categorias = ObjetoPersistente.find(Categoria.class, "nombre = ? AND padre=?", nombreCategoria, padre.getId().toString());
-        }
-        else
-        {
-            // Busca entre las cats sin padre
-            categorias = ObjetoPersistente.find(Categoria.class, "nombre = ?", nombreCategoria);
-        }
-        if (categorias == null || categorias.size() == 0) {
-            return null;
-        } else {
-            return categorias.get(0);
-        }
+        String padreId = (padre != null)?padre.getId().toString():"0";
+        return ObjetoPersistente.findFirst(Categoria.class, "nombre = ? AND padre=?", nombreCategoria, padreId);
+    }
+
+    public static Categoria obtenerDeCualquierPadre(String nombreCategoria) {
+        List<Categoria> categorias;
+        return ObjetoPersistente.findFirst(Categoria.class, "nombre = ?", nombreCategoria);
     }
 
     public static Categoria obtenerOCrear(String nombreCategoria, Categoria padre) {

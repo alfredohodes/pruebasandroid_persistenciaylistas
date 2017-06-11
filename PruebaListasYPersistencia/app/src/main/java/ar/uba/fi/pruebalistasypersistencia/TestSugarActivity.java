@@ -28,6 +28,7 @@ public class TestSugarActivity extends Activity {
         crearEtiquetas();
         leerEtiquetas();
 
+
         crearPrendas();
         leerPrendas();
 
@@ -53,6 +54,8 @@ public class TestSugarActivity extends Activity {
         Categoria.obtenerOCrear("guantes", Categoria.obtener("accesorio", Categoria.obtener("prenda", null)));
         Categoria.obtenerOCrear("corbatas", null);
         Categoria.obtenerOCrear("corbatas", null).SetPadre(Categoria.obtenerOCrear("accesorio", Categoria.obtener("prenda", null)));
+
+        Categoria.obtenerDeCualquierPadre("corbatas").Renombrar("corbatines");
     }
 
     private void leerCategorias() {
@@ -98,6 +101,9 @@ public class TestSugarActivity extends Activity {
 
         campera.agregarEtiqueta("etiqueta_a_eliminar");
         campera.quitarEtiqueta("etiqueta_a_eliminar");
+
+        // Renombrar etiqueta
+        Etiqueta.obtener("calor").Renombrar("lacalor");
 
         campera.setCategoria(Categoria.obtener("camperas", Categoria.obtener("superior", Categoria.obtener("prenda", null))));
         pantalon.setCategoria(Categoria.obtener("pantalones", Categoria.obtener("inferior", Categoria.obtener("prenda", null))));
