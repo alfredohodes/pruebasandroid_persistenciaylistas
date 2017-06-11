@@ -63,4 +63,87 @@ public class ListaUtils {
         String[] whereArgs = whereArgsList.toArray(new String[whereArgsList.size()]);
         return ObjetoPersistente.find(type, whereClause, whereArgs);
     }
+
+    public static <T extends ItemLista> List<T> listarPorEtiqueta(Class<T> type, Etiqueta etiqueta)
+    {
+        Log.d("DANE","LISTAR POR ETIQUETA - " + etiqueta);
+        if(etiqueta == null) return null;
+
+        // 1: Obtener todas los "pares"
+        String nombreAtributoEtiqueta   = "ETIQUETA";
+        String nombreAtributoItemType   = "ITEM_TYPE_NAME";
+
+        String idEtiqueta = etiqueta.getId().toString();
+        String itemTypeName = type.getName();
+
+        String whereClause = nombreAtributoEtiqueta + "=? AND " + nombreAtributoItemType + "=?";
+//        Log.d("DANE","whereClause: " + whereClause + "  --  (" + idEtiqueta + ")");
+        List<ParEtiquetaItem> list = ObjetoPersistente.find(ParEtiquetaItem.class, whereClause, idEtiqueta, itemTypeName);
+
+        // 2: Recorrer todos los pares para obtener los items a devolver
+        List<T> items = new ArrayList<T>();
+        for(int i = 0; i < list.size(); i++)
+        {
+            items.add((T)list.get(i).item);
+        }
+        return  items;
+    }
+
+    public static <T extends ItemLista> List<T> listarPorEtiquetas(Class<T> type, Etiqueta[] etiquetas, String condicionEtiquetas)
+    {
+        Log.d("DANE","LISTAR POR ETIQUETAS - " + etiquetas);
+        if(etiquetas == null || etiquetas.length == 0) return null;
+
+        if(condicionEtiquetas != "OR") condicionEtiquetas = "AND";
+
+        // 1: Pbtener todas los "pares"
+        List<String> queryArgsList = new ArrayList<String>();
+        // 1.a: Armar where clause con todas las etiquetas
+        String nombreAtributoEtiqueta   = "ETIQUETA";
+        String etiquetasWhereClause = "";
+        for(int i = 0; i < etiquetas.length; i++)
+        {
+//            nombreAtributoItem + "=? AND " + nombreAtributoItemType + "=?";
+            etiquetasWhereClause += nombreAtributoEtiqueta + " =?";
+            if(i < etiquetas.length - 1) etiquetasWhereClause+= " " + condicionEtiquetas + " ";
+
+            queryArgsList.add(etiquetas[i].getId().toString());
+            Log.d("DANE","whereArgsList.add(id:" + etiquetas[i].getId().toString() + ")");
+        }
+        String nombreAtributoItemType   = "ITEM_TYPE_NAME";
+        String itemTypeName = type.getName();
+
+        queryArgsList.add(itemTypeName);
+
+        String whereClause = "(" + etiquetasWhereClause + ") AND " + nombreAtributoItemType + "=?";
+        Log.d("DANE","whereClause: " + whereClause + "  --  itemTypeName: " + itemTypeName);
+        String[] whereArgs = queryArgsList.toArray(new String[queryArgsList.size()]);
+        List<ParEtiquetaItem> list = ObjetoPersistente.find(ParEtiquetaItem.class, whereClause, whereArgs);
+
+        // 2: Recorrer todos los pares para obtener los items a devolver
+        List<T> items = new ArrayList<T>();
+        for(int i = 0; i < list.size(); i++)
+        {
+            items.add((T)list.get(i).item);
+        }
+        return  items;
+    }
+
+    public static void eliminarRelacionesParaEtiqueta(Etiqueta etiqueta)
+    {
+//        Log.d("DANE","eliminarRelacionesParaEtiqueta - etiqueta: " + etiqueta);
+        if(etiqueta == null) return;
+
+        String nombreAtributoEtiqueta   = "ETIQUETA";
+        String idEtiqueta = etiqueta.getId().toString();
+
+        String whereClause = nombreAtributoEtiqueta + "=?";
+//        Log.d("DANE","whereClause: " + whereClause + "  --  (" + idEtiqueta + ")");
+        List<ParEtiquetaItem> list = ObjetoPersistente.find(ParEtiquetaItem.class, whereClause, idEtiqueta);
+        for(int i = 0; i < list.size(); i++)
+        {
+//            Log.d("DANE","Borrando Par " + list.get(i));
+            list.get(i).delete();
+        }
+    }
 }

@@ -33,6 +33,7 @@ public class TestSugarActivity extends Activity {
         leerPrendas();
 
         buscarPorCategoria();
+        buscarPorEtiqueta();
 
 
 
@@ -146,6 +147,20 @@ public class TestSugarActivity extends Activity {
         List<Prenda> prendas = ListaUtils.listarPorCategoria(Prenda.class, Categoria.obtenerDeCualquierPadre("prenda"), true);
         for (int i=0; i<prendas.size(); i++) {
             Log.d("DANE","prendas[" + i + "]: " + prendas.get(i));
+        }
+    }
+
+    private void buscarPorEtiqueta() {
+        Log.d("DANE","*** buscarPorEtiqueta ***");
+        Log.d("DANE","ETIQUETA: informal");
+        List<Prenda> informales = ListaUtils.listarPorEtiqueta(Prenda.class, Etiqueta.obtener("informal"));
+        for (int i=0; i<informales.size(); i++) {
+            Log.d("DANE","informales[" + i + "]: " + informales.get(i));
+        }
+        Log.d("DANE","ETIQUETAS: informal Y frio");
+        List<Prenda> informalesYFrios = ListaUtils.listarPorEtiquetas(Prenda.class, new Etiqueta[]{Etiqueta.obtener("informal"), Etiqueta.obtener("frio")},"OR");
+        for (int i=0; i<informalesYFrios.size(); i++) {
+            Log.d("DANE","informalesYFrios[" + i + "]: " + informalesYFrios.get(i));
         }
     }
 
