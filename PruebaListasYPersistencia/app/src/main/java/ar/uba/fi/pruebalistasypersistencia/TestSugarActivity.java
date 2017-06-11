@@ -32,6 +32,12 @@ public class TestSugarActivity extends Activity {
         crearPrendas();
         leerPrendas();
 
+        buscarPorCategoria();
+
+
+
+
+
         DBUtils.Dump("Sugar.db", getPackageName(), "Sugar_PreEliminado.db");
         
         testearAutoeliminadoDeRelacionesItemEtiqueta();
@@ -116,6 +122,30 @@ public class TestSugarActivity extends Activity {
         for (int i=0; i<prendas.size(); i++) {
             Log.d("DANE","prendas[" + i + "]: " + prendas.get(i));
             prendas.get(i).obtenerEtiquetas();
+        }
+    }
+
+    private void buscarPorCategoria() {
+        Log.d("DANE","*** buscarPorCategoria ***");
+        Log.d("DANE","CATEGORIA: remeras");
+        List<Prenda> remeras = ListaUtils.listarPorCategoria(Prenda.class, Categoria.obtenerDeCualquierPadre("remeras"), true);
+        for (int i=0; i<remeras.size(); i++) {
+            Log.d("DANE","remera[" + i + "]: " + remeras.get(i));
+        }
+        Log.d("DANE","CATEGORIA: accesorio");
+        List<Prenda> accesorios = ListaUtils.listarPorCategoria(Prenda.class, Categoria.obtenerDeCualquierPadre("accesorio"), true);
+        for (int i=0; i<accesorios.size(); i++) {
+            Log.d("DANE","accesorios[" + i + "]: " + accesorios.get(i));
+        }
+        Log.d("DANE","CATEGORIA: superior");
+        List<Prenda> superior = ListaUtils.listarPorCategoria(Prenda.class, Categoria.obtenerDeCualquierPadre("superior"), true);
+        for (int i=0; i<superior.size(); i++) {
+            Log.d("DANE","superior[" + i + "]: " + superior.get(i));
+        }
+        Log.d("DANE","CATEGORIA: prenda");
+        List<Prenda> prendas = ListaUtils.listarPorCategoria(Prenda.class, Categoria.obtenerDeCualquierPadre("prenda"), true);
+        for (int i=0; i<prendas.size(); i++) {
+            Log.d("DANE","prendas[" + i + "]: " + prendas.get(i));
         }
     }
 
