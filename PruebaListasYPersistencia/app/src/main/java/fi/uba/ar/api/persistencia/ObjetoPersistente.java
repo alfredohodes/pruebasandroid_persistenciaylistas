@@ -1,6 +1,8 @@
 package fi.uba.ar.api.persistencia;
 
 import android.database.Cursor;
+import android.os.Debug;
+import android.util.Log;
 
 import com.orm.SugarRecord;
 import com.orm.util.NamingHelper;
@@ -15,7 +17,10 @@ import java.util.List;
  */
 
 public class ObjetoPersistente extends SugarRecord {
-    public ObjetoPersistente(){super();}
+    public ObjetoPersistente()
+    {
+        super();
+    }
 
     public void InicializarPostLoaded()
     {

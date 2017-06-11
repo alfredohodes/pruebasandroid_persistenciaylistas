@@ -27,7 +27,7 @@ public class ListaUtils {
     public static <T extends ItemLista> List<T> listarPorCategoria(Class<T> type, Categoria categoriaBase, boolean incluirSubcategorias)
     {
 //        Log.d("DANE","LISTAR POR CATEGORIA - " + categoriaBase);
-        if(categoriaBase == null) return null;
+        if(categoriaBase == null) return new ArrayList<T>();
         List<Categoria> categorias = new ArrayList<Categoria>();
         categorias.add(categoriaBase);
         if(incluirSubcategorias)
@@ -70,7 +70,7 @@ public class ListaUtils {
     public static <T extends ItemLista> List<T> listarPorEtiqueta(Class<T> type, Etiqueta etiqueta)
     {
 //        Log.d("DANE","LISTAR POR ETIQUETA - " + etiqueta);
-        if(etiqueta == null) return null;
+        if(etiqueta == null) return  new ArrayList<T>();
 
         // 1: Obtener todas los "pares"
         String nombreAtributoEtiqueta   = "ETIQUETA";
@@ -95,7 +95,7 @@ public class ListaUtils {
     public static <T extends ItemLista> List<T> listarPorEtiquetas(Class<T> type, Etiqueta[] etiquetas, boolean soloDevolverSiCumpleTodasLasEtiquetas)
     {
 //        Log.d("DANE","LISTAR POR ETIQUETAS - " + etiquetas);
-        if(etiquetas == null || etiquetas.length == 0) return null;
+        if(etiquetas == null || etiquetas.length == 0) return new ArrayList<T>();
 
         // 1: Pbtener todas los "pares"
         List<String> queryArgsList = new ArrayList<String>();
@@ -146,16 +146,6 @@ public class ListaUtils {
                     {
                         etiquetasAVerificar.add(list.get(j).etiqueta.getId());
                     }
-//                    Iterator<Long> et_iter = idsEtiquetas.iterator();
-//                    while(et_iter.hasNext())
-//                    {
-//                        Log.d("DANE","Elemento de idsEtiquetas -> " + et_iter.next());
-//                    }
-//                    et_iter = etiquetasAVerificar.iterator();
-//                    while(et_iter.hasNext())
-//                    {
-//                        Log.d("DANE","Elemento de etiquetasAVerificar -> " + et_iter.next());
-//                    }
                     if(etiquetasAVerificar.containsAll(idsEtiquetas))
                     {
 //                        Log.d("DANE","Contiene todas las etiquetas!: " + itemProcesado);
@@ -176,6 +166,34 @@ public class ListaUtils {
         }
         return  items;
     }
+
+    public static <T extends ItemLista> List<T> listarPorCategoriaYEtiquetas(Class<T> type, Categoria categoriaBase, boolean incluirSubcategorias, Etiqueta[] etiquetas, boolean soloDevolverSiCumpleTodasLasEtiquetas)
+    {
+        // TODO: Optimizar!
+        List<T> itemsPorCategoria = listarPorCategoria(type, categoriaBase, incluirSubcategorias);
+        List<T> itemsPorEtiquetas = listarPorEtiquetas(type, etiquetas, soloDevolverSiCumpleTodasLasEtiquetas);
+
+        Set<Long> itemIdsPorCat = new HashSet<Long>();
+        for(int i = 0; i < itemsPorCategoria.size(); i++)
+        {
+            itemIdsPorCat.add(itemsPorCategoria.get(i).getId());
+        }
+
+        List<T> itemsEnAmbasListas = new ArrayList<T>();
+        for(int i = 0; i < itemsPorEtiquetas.size(); i++)
+        {
+            Long itemId = itemsPorEtiquetas.get(i).getId();
+            if(itemIdsPorCat.contains(itemId))
+            {
+                // En ambas! Agregarlo a la lista a devolver y quitarlo del 1er hash para no procesarlo de nuevo
+                itemsEnAmbasListas.add(itemsPorEtiquetas.get(i));
+                itemIdsPorCat.remove(itemId);
+            }
+        }
+
+        return  itemsEnAmbasListas;
+    }
+
 
     public static void eliminarRelacionesParaEtiqueta(Etiqueta etiqueta)
     {

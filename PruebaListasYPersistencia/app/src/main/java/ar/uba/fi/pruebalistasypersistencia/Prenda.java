@@ -20,6 +20,7 @@ public class Prenda extends ItemLista {
         super();
         this.nombre = nombre;
         this.rutaImagen = rutaImagen;
+        save();
 //        Log.d("DANE","nueva Prenda(" + nombre + ")");
     }
 
