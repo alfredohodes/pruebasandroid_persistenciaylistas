@@ -3,7 +3,10 @@ package fi.uba.ar.listas;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -23,7 +26,7 @@ public class ListaUtils {
 
     public static <T extends ItemLista> List<T> listarPorCategoria(Class<T> type, Categoria categoriaBase, boolean incluirSubcategorias)
     {
-        Log.d("DANE","LISTAR POR CATEGORIA - " + categoriaBase);
+//        Log.d("DANE","LISTAR POR CATEGORIA - " + categoriaBase);
         if(categoriaBase == null) return null;
         List<Categoria> categorias = new ArrayList<Categoria>();
         categorias.add(categoriaBase);
@@ -36,12 +39,12 @@ public class ListaUtils {
             {
                 // 2: Tomar un elemento y buscar todos sus hijos.
                 Categoria categoriaActual = categoriasABuscarHijos.pop();
-                Log.d("DANE","categoriaActual: " + categoriaActual);
+//                Log.d("DANE","categoriaActual: " + categoriaActual);
                 List<Categoria> hijos = ObjetoPersistente.find(Categoria.class, "PADRE =?", categoriaActual.getId().toString());
                 for(int i = 0; i < hijos.size(); i++)
                 {
                     Categoria catHijo = hijos.get(i);
-                    Log.d("DANE","CATEGORIA HIJO ENCONTRADA! - " + catHijo.nombre + " hija de " + categoriaActual.nombre);
+//                    Log.d("DANE","CATEGORIA HIJO ENCONTRADA! - " + catHijo.nombre + " hija de " + categoriaActual.nombre);
                     categoriasABuscarHijos.push(catHijo);
                     categorias.add(catHijo);
                 }
@@ -57,16 +60,16 @@ public class ListaUtils {
             if(i < categorias.size() - 1) whereClause+= " OR ";
 
             whereArgsList.add(categorias.get(i).getId().toString());
-            Log.d("DANE","whereArgsList.add(id:" + categorias.get(i).getId().toString() + ")");
+//            Log.d("DANE","whereArgsList.add(id:" + categorias.get(i).getId().toString() + ")");
         }
-        Log.d("DANE","whereClause: " + whereClause);
+//        Log.d("DANE","whereClause: " + whereClause);
         String[] whereArgs = whereArgsList.toArray(new String[whereArgsList.size()]);
         return ObjetoPersistente.find(type, whereClause, whereArgs);
     }
 
     public static <T extends ItemLista> List<T> listarPorEtiqueta(Class<T> type, Etiqueta etiqueta)
     {
-        Log.d("DANE","LISTAR POR ETIQUETA - " + etiqueta);
+//        Log.d("DANE","LISTAR POR ETIQUETA - " + etiqueta);
         if(etiqueta == null) return null;
 
         // 1: Obtener todas los "pares"
@@ -89,26 +92,26 @@ public class ListaUtils {
         return  items;
     }
 
-    public static <T extends ItemLista> List<T> listarPorEtiquetas(Class<T> type, Etiqueta[] etiquetas, String condicionEtiquetas)
+    public static <T extends ItemLista> List<T> listarPorEtiquetas(Class<T> type, Etiqueta[] etiquetas, boolean soloDevolverSiCumpleTodasLasEtiquetas)
     {
-        Log.d("DANE","LISTAR POR ETIQUETAS - " + etiquetas);
+//        Log.d("DANE","LISTAR POR ETIQUETAS - " + etiquetas);
         if(etiquetas == null || etiquetas.length == 0) return null;
-
-        if(condicionEtiquetas != "OR") condicionEtiquetas = "AND";
 
         // 1: Pbtener todas los "pares"
         List<String> queryArgsList = new ArrayList<String>();
         // 1.a: Armar where clause con todas las etiquetas
         String nombreAtributoEtiqueta   = "ETIQUETA";
         String etiquetasWhereClause = "";
+        Set<Long> idsEtiquetas = new HashSet<Long>();
         for(int i = 0; i < etiquetas.length; i++)
         {
 //            nombreAtributoItem + "=? AND " + nombreAtributoItemType + "=?";
             etiquetasWhereClause += nombreAtributoEtiqueta + " =?";
-            if(i < etiquetas.length - 1) etiquetasWhereClause+= " " + condicionEtiquetas + " ";
+            if(i < etiquetas.length - 1) etiquetasWhereClause+= " OR ";
 
             queryArgsList.add(etiquetas[i].getId().toString());
-            Log.d("DANE","whereArgsList.add(id:" + etiquetas[i].getId().toString() + ")");
+            idsEtiquetas.add(etiquetas[i].getId());
+//            Log.d("DANE","whereArgsList.add(id:" + etiquetas[i].getId().toString() + ")");
         }
         String nombreAtributoItemType   = "ITEM_TYPE_NAME";
         String itemTypeName = type.getName();
@@ -116,15 +119,60 @@ public class ListaUtils {
         queryArgsList.add(itemTypeName);
 
         String whereClause = "(" + etiquetasWhereClause + ") AND " + nombreAtributoItemType + "=?";
-        Log.d("DANE","whereClause: " + whereClause + "  --  itemTypeName: " + itemTypeName);
+//        Log.d("DANE","whereClause: " + whereClause + "  --  itemTypeName: " + itemTypeName);
         String[] whereArgs = queryArgsList.toArray(new String[queryArgsList.size()]);
         List<ParEtiquetaItem> list = ObjetoPersistente.find(ParEtiquetaItem.class, whereClause, whereArgs);
 
         // 2: Recorrer todos los pares para obtener los items a devolver
+        Set<Long> itemIdsProcesados = new HashSet<Long>();
         List<T> items = new ArrayList<T>();
         for(int i = 0; i < list.size(); i++)
         {
-            items.add((T)list.get(i).item);
+            // Evitar duplicados
+            ItemLista itemProcesado = list.get(i).item;
+//            Log.d("DANE","itemProcesado: " + itemProcesado);
+            if(itemIdsProcesados.contains(itemProcesado.getId()))
+            {
+//                Log.d("DANE","Saltear ya procesado: " + itemProcesado);
+            }
+            else
+            {
+                if(soloDevolverSiCumpleTodasLasEtiquetas)
+                {
+                    Set<Long> etiquetasAVerificar = new HashSet<Long>();
+                    // TODO: Verificar que este ítem cumpla con TODAS las etiquetas
+                    etiquetasAVerificar.add(list.get(i).etiqueta.getId()); // Agrego la etiqueta del par actual y evalúo los siguientes
+                    for(int j = i+1; j < list.size(); j++)
+                    {
+                        etiquetasAVerificar.add(list.get(j).etiqueta.getId());
+                    }
+//                    Iterator<Long> et_iter = idsEtiquetas.iterator();
+//                    while(et_iter.hasNext())
+//                    {
+//                        Log.d("DANE","Elemento de idsEtiquetas -> " + et_iter.next());
+//                    }
+//                    et_iter = etiquetasAVerificar.iterator();
+//                    while(et_iter.hasNext())
+//                    {
+//                        Log.d("DANE","Elemento de etiquetasAVerificar -> " + et_iter.next());
+//                    }
+                    if(etiquetasAVerificar.containsAll(idsEtiquetas))
+                    {
+//                        Log.d("DANE","Contiene todas las etiquetas!: " + itemProcesado);
+                        items.add((T)itemProcesado);
+                    }
+                    else
+                    {
+//                        Log.d("DANE","No Contiene todas las etiquetas: " + itemProcesado + "  --  (" + etiquetasAVerificar.size() + "/" + idsEtiquetas.size() + ")");
+                    }
+                }
+                else
+                {
+                    // Con que cumpla con 1 sola se devuelve
+                    items.add((T)itemProcesado);
+                }
+                itemIdsProcesados.add(itemProcesado.getId());
+            }
         }
         return  items;
     }

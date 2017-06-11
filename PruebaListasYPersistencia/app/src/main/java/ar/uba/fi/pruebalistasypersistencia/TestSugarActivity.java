@@ -34,6 +34,7 @@ public class TestSugarActivity extends Activity {
 
         buscarPorCategoria();
         buscarPorEtiqueta();
+        buscarPorEtiquetaYCategoria();
 
 
 
@@ -157,11 +158,25 @@ public class TestSugarActivity extends Activity {
         for (int i=0; i<informales.size(); i++) {
             Log.d("DANE","informales[" + i + "]: " + informales.get(i));
         }
+        Log.d("DANE","ETIQUETA: frio");
+        List<Prenda> frios = ListaUtils.listarPorEtiqueta(Prenda.class, Etiqueta.obtener("frio"));
+        for (int i=0; i<frios.size(); i++) {
+            Log.d("DANE","frios[" + i + "]: " + frios.get(i));
+        }
+        Log.d("DANE","ETIQUETAS: informal O frio");
+        List<Prenda> informalesOFrios = ListaUtils.listarPorEtiquetas(Prenda.class, new Etiqueta[]{Etiqueta.obtener("informal"), Etiqueta.obtener("frio")}, false);
+        for (int i=0; i<informalesOFrios.size(); i++) {
+            Log.d("DANE","informalesOFrios[" + i + "]: " + informalesOFrios.get(i));
+        }
         Log.d("DANE","ETIQUETAS: informal Y frio");
-        List<Prenda> informalesYFrios = ListaUtils.listarPorEtiquetas(Prenda.class, new Etiqueta[]{Etiqueta.obtener("informal"), Etiqueta.obtener("frio")},"OR");
+        List<Prenda> informalesYFrios = ListaUtils.listarPorEtiquetas(Prenda.class, new Etiqueta[]{Etiqueta.obtener("informal"), Etiqueta.obtener("frio")}, true);
         for (int i=0; i<informalesYFrios.size(); i++) {
             Log.d("DANE","informalesYFrios[" + i + "]: " + informalesYFrios.get(i));
         }
+    }
+
+    private void buscarPorEtiquetaYCategoria() {
+        Log.d("DANE","*** buscarPorEtiquetaYCategoria ***");
     }
 
     private void testearAutoeliminadoDeRelacionesItemEtiqueta() {
