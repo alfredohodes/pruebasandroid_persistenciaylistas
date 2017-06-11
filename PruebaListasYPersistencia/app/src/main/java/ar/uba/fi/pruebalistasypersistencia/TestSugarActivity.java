@@ -20,31 +20,35 @@ public class TestSugarActivity extends Activity {
 
         DBUtils.Inicializar(getApplicationContext(), true);
 
-//        limpiarBD();
-//
-//        crearCategorias();
-//        leerCategorias();
-//
-//        crearEtiquetas();
-//        leerEtiquetas();
-//
-//        crearPrendas();
+        crearCategorias();
+        leerCategorias();
+
+        crearEtiquetas();
+        leerEtiquetas();
+
+        crearPrendas();
         leerPrendas();
 
         DBUtils.Dump("Sugar.db", getPackageName(), "Sugar.db");
     }
 
     private void crearCategorias() {
-        Log.d("DANE","crearCategorias!");
-        Categoria catPadre = new Categoria("cat padre");
-        catPadre.save();
-        Categoria catHija = new Categoria("catHija");
-        catHija.padre = catPadre;
-        catHija.save();
+        Log.d("DANE","*** crearCategorias ***");
+
+        Categoria.obtenerOCrear("prenda", null);
+        Categoria.obtenerOCrear("superior", Categoria.obtener("prenda", null));
+        Categoria.obtenerOCrear("inferior", Categoria.obtener("prenda", null));
+        Categoria.obtenerOCrear("accesorio", Categoria.obtener("prenda", null));
+        Categoria.obtenerOCrear("remeras", Categoria.obtener("superior", Categoria.obtener("prenda", null)));
+        Categoria.obtenerOCrear("camperas", Categoria.obtener("superior", Categoria.obtener("prenda", null)));
+        Categoria.obtenerOCrear("pantalones", Categoria.obtener("inferior", Categoria.obtener("prenda", null)));
+        Categoria.obtenerOCrear("guantes", Categoria.obtener("accesorio", Categoria.obtener("prenda", null)));
+        Categoria.obtenerOCrear("corbatas", null);
+        Categoria.obtenerOCrear("corbatas", null).SetPadre(Categoria.obtenerOCrear("accesorio", Categoria.obtener("prenda", null)));
     }
 
     private void leerCategorias() {
-        Log.d("DANE","leerCategorias!");
+        Log.d("DANE","*** leerCategorias ***");
         List<Categoria> categorias = ListaUtils.listarTodos(Categoria.class);
         for (int i=0; i<categorias.size(); i++) {
             Log.d("DANE","categorias[" + i + "]: " + categorias.get(i));
@@ -53,19 +57,16 @@ public class TestSugarActivity extends Activity {
 
 
     private void crearEtiquetas() {
-        Log.d("DANE","crearEtiquetas!");
+        Log.d("DANE","*** crearEtiquetas ***");
 
-        Etiqueta etiquetaCalor = new Etiqueta("calor");
-        Etiqueta etiquetaFrio = new Etiqueta("frio");
-        Etiqueta etiquetaInformal = new Etiqueta("informal");
-
-        etiquetaCalor.save();
-        etiquetaFrio.save();
-        etiquetaInformal.save();
+        Etiqueta.obtenerOCrear("calor");
+        Etiqueta.obtenerOCrear("frio");
+        Etiqueta.obtenerOCrear("formal");
+        Etiqueta.obtenerOCrear("informal");
     }
 
     private void leerEtiquetas() {
-        Log.d("DANE","leerEtiquetas!");
+        Log.d("DANE","*** leerEtiquetas ***");
         List<Etiqueta> etiquetas = ListaUtils.listarTodos(Etiqueta.class);
         for (int i=0; i<etiquetas.size(); i++) {
             Log.d("DANE","etiquetas[" + i + "]: " + etiquetas.get(i));
@@ -73,39 +74,30 @@ public class TestSugarActivity extends Activity {
     }
 
     private void crearPrendas() {
-
+        Log.d("DANE","*** crearPrendas ***");
         Prenda remera = new Prenda("Remera","ruta/remera");
         Prenda pantalon = new Prenda("Pantalon","ruta/pantalon");
         Prenda campera = new Prenda("Campera","ruta/campera");
-
-        Categoria catHija = Categoria.find(Categoria.class,"nombre = ?", "catHija").get(0);
-        Log.d("DANE","catHija found: " + catHija);
-
-        remera.categoria = catHija;
 
         remera.save();
         pantalon.save();
         campera.save();
 
         campera.agregarEtiqueta("frio");
-        remera.agregarEtiqueta(Etiqueta.obtenerOCrear("calor"));
+        remera.agregarEtiqueta("calor");
         pantalon.agregarEtiqueta("informal");
-        campera.agregarEtiqueta(Etiqueta.obtenerOCrear("informal"));
+        campera.agregarEtiqueta("informal");
 
-//        remera.save();
-//        pantalon.save();
-//        campera.save();
+        campera.agregarEtiqueta("etiqueta_a_eliminar");
+        campera.quitarEtiqueta("etiqueta_a_eliminar");
 
-        Log.d("DANE","obtener etiquetas de remera (prenda id: " + remera.getId() + ")");
-        remera.obtenerEtiquetas();
-        Log.d("DANE","obtener etiquetas de campera (prenda id: " + campera.getId() + ")");
-        campera.obtenerEtiquetas();
-        Log.d("DANE","obtener etiquetas de pantalon (prenda id: " + pantalon.getId() + ")");
-        pantalon.obtenerEtiquetas();
+        campera.setCategoria(Categoria.obtener("camperas", Categoria.obtener("superior", Categoria.obtener("prenda", null))));
+        pantalon.setCategoria(Categoria.obtener("pantalones", Categoria.obtener("inferior", Categoria.obtener("prenda", null))));
+        remera.setCategoria(Categoria.obtener("remeras", Categoria.obtener("superior", Categoria.obtener("prenda", null))));
     }
 
     private void leerPrendas() {
-
+        Log.d("DANE","*** leerPrendas ***");
         List<Prenda> prendas = ListaUtils.listarTodos(Prenda.class);
         for (int i=0; i<prendas.size(); i++) {
             Log.d("DANE","prendas[" + i + "]: " + prendas.get(i));

@@ -30,15 +30,21 @@ public class Etiqueta extends ItemLista {
         return "{Etiqueta(" + getId() + ") - Nombre: " + nombre + "}";
     }
 
-    public static Etiqueta obtenerOCrear(String nombreEtiqueta) {
-        List<Etiqueta> etiquetas = ObjetoPersistente.find(Etiqueta.class, "nombre = ?", nombreEtiqueta);
-        if (etiquetas == null || etiquetas.size() == 0) {
-            // Etiqueta no existente. Crearla
-            Etiqueta etiqueta = new Etiqueta(nombreEtiqueta);
+    public static Etiqueta obtenerOCrear(String nombreEtiqueta)
+    {
+        Etiqueta etiqueta = obtener(nombreEtiqueta);
+        if(etiqueta == null)
+        {
+            etiqueta = new Etiqueta(nombreEtiqueta);
             etiqueta.save();
-            return etiqueta;
-        } else {
-            return etiquetas.get(0);
         }
+        return etiqueta;
+    }
+
+    public static Etiqueta obtener(String nombreEtiqueta)
+    {
+        List<Etiqueta> etiquetas = ObjetoPersistente.find(Etiqueta.class, "nombre = ?", nombreEtiqueta);
+        if (etiquetas == null || etiquetas.size() == 0) return null;
+        return etiquetas.get(0);
     }
 }

@@ -28,6 +28,7 @@ public class DBUtils {
 
     public  static void Inicializar(Context context, boolean borrarTablas)
     {
+        Log.d("DANE","*** DBUtils.Inicializar ***");
         SugarContext.terminate();
 
         SchemaGenerator schemaGenerator = new SchemaGenerator(context);
@@ -39,6 +40,7 @@ public class DBUtils {
     }
     public static void Dump(String dbName, String packageName, String outputDBName)
     {
+        Log.d("DANE","*** DBUtils.Dump ***");
         try {
             File sd = Environment.getExternalStorageDirectory();
             File data = Environment.getDataDirectory();

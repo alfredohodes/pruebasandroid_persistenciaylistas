@@ -44,13 +44,24 @@ public class ItemLista extends ObjetoPersistente
         Log.d("DANE","agregarEtiqueta - parEtiquetaItem: " + parEtiquetaItem + " - etiqueta: " + etiqueta.nombre);
     }
 
+    public void setCategoria(Categoria categoria)
+    {
+        this.categoria = categoria;
+        save();
+    }
+
     public void quitarEtiqueta(String nombreEtiqueta)
     {
-
+        Log.d("DANE","quitarEtiqueta(" + nombreEtiqueta + ")");
+        ParEtiquetaItem.eliminarPar(this, Etiqueta.obtener(nombreEtiqueta));
     }
     public void quitarEtiqueta(Etiqueta etiqueta)
     {
-
+        if(etiqueta != null)
+        {
+            Log.d("DANE","quitarEtiqueta(" + etiqueta.nombre + ")");
+            ParEtiquetaItem.eliminarPar(this, etiqueta);
+        }
     }
     public List<Etiqueta> obtenerEtiquetas()
     {
